@@ -11,7 +11,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import blog.*;
 
-public class AddWindow {
+public class AddWindow_old {
 	private Text txtTitel;
 	private Text txtText;
 	private Text txtNamn;
@@ -58,8 +58,8 @@ public class AddWindow {
 				{
 					Author a = new Author(namn, mail);
 					Calendar c = new GregorianCalendar();
-					MainWindow.posts.add(new Post(titel, text, a, c));
-					MainWindow.refresh();
+					MainWindow_old.posts.add(new Post(titel, text, a, c));
+					MainWindow_old.refresh();
 					shlLggTillPost.close();
 				}
 			}

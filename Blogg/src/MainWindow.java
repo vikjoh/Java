@@ -1,86 +1,103 @@
+import java.awt.EventQueue;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.List;
-import org.eclipse.wb.swt.SWTResourceManager;
-import blog.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.UIManager;
+import javax.swing.JLabel;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
-public class MainWindow {
+import blog.Author;
+import blog.Comment;
+import blog.Post;
+import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
+
+
+public class MainWindow extends JFrame {
+
+	private JPanel contentPane;
+
+	/**
+	 * Launch the application.
+	 */
 	
 	public static ArrayList<Post> posts = new ArrayList<>();
-	static Display display = Display.getDefault();
-	static Shell shlBlogg = new Shell();
-
-	final static List list = new List(shlBlogg, SWT.BORDER);
+	SimpleDateFormat mainSDF = new SimpleDateFormat("yyyy-MM-dd");
 	
 	public static void main(String[] args) {
-		
-		shlBlogg.setSize(450, 300);
-		shlBlogg.setText("Blogg");
-		
-		final Label lblMainLabel = new Label(shlBlogg, SWT.NONE);
-		lblMainLabel.setAlignment(SWT.CENTER);
-		lblMainLabel.setBounds(134, 66, 290, 155);
-		
-		Button btnLggTill = new Button(shlBlogg, SWT.NONE);
-		btnLggTill.setBounds(10, 227, 109, 25);
-		btnLggTill.setText("L\u00E4gg till post");
-
-		final Label lblHeaderlabel = new Label(shlBlogg, SWT.NONE);
-		lblHeaderlabel.setFont(SWTResourceManager.getFont("Segoe UI", 13, SWT.NORMAL));
-		lblHeaderlabel.setAlignment(SWT.CENTER);
-		lblHeaderlabel.setBounds(134, 10, 290, 39);
-		
-		list.setBounds(10, 10, 109, 211);
-		
-		final Label lblFooterlabel = new Label(shlBlogg, SWT.NONE);
-		lblFooterlabel.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
-		lblFooterlabel.setAlignment(SWT.RIGHT);
-		lblFooterlabel.setBounds(134, 227, 290, 25);
-		
-		init();
-		
-		for(Post p : posts){
-			list.add(p.getTitle(), posts.indexOf(p));
-		}
-		
-		
-		btnLggTill.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				AddWindow window = new AddWindow();
-				window.open();
-			}
-		});	
-		
-		list.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			
-		        int[] selectedItems = list.getSelectionIndices();
-		        lblHeaderlabel.setText(posts.get(selectedItems[0]).getTitle());
-		        lblMainLabel.setText(posts.get(selectedItems[0]).getText());
-		        lblFooterlabel.setText(posts.get(selectedItems[0]).getAuthor().getName() + ", " +
-		        sdf.format(posts.get(selectedItems[0]).getCalendar().getTime()));
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					MainWindow frame = new MainWindow();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public MainWindow() {
+		init();
 		
-		shlBlogg.open();
-		shlBlogg.layout();
-		while (!shlBlogg.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(null);
+		setContentPane(contentPane);
+		
+		DefaultListModel listModel = new DefaultListModel();
+		final JList list = new JList(listModel);
+		list.setSize(100, 241);
+		for(Post p : posts){
+			listModel.addElement(p.getTitle());
 		}
+		
+		list.setBorder(new LineBorder(new Color(0, 0, 0)));
+		list.setLocation(10, 10);
+		contentPane.add(list);
+
+		
+		final JLabel lblHeader = new JLabel(posts.get(0).getTitle());
+		lblHeader.setSize(304, 30);
+		lblHeader.setLocation(120, 11);
+		contentPane.add(lblHeader);
+		
+		final JLabel lblFooter = new JLabel(posts.get(0).getAuthor().getName() + ", " +
+		        mainSDF.format(posts.get(0).getCalendar().getTime()));
+		lblFooter.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblFooter.setSize(304, 20);
+		lblFooter.setLocation(120, 231);
+		contentPane.add(lblFooter);
+		
+		final JLabel lblBody = new JLabel(posts.get(0).getText());
+		lblBody.setVerticalAlignment(SwingConstants.TOP);
+		lblBody.setSize(304, 168);
+		lblBody.setLocation(120, 52);
+		contentPane.add(lblBody);
+		
+		list.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+
+		        int[] selectedItems = list.getSelectedIndices();
+		        lblHeader.setText(posts.get(selectedItems[0]).getTitle());
+		        lblBody.setText(posts.get(selectedItems[0]).getText());
+		        lblFooter.setText(posts.get(selectedItems[0]).getAuthor().getName() + ", " +
+		        mainSDF.format(posts.get(selectedItems[0]).getCalendar().getTime()));
+			}
+		});
 	}
 	public static void init(){
 		
@@ -94,11 +111,5 @@ public class MainWindow {
 		posts.add(p);
 		
 	}
-	
-	public static void refresh() {
-		list.removeAll();
-		for(Post p : posts){
-			list.add(p.getTitle(), posts.indexOf(p));
-		}
-	}
+
 }
