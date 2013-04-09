@@ -1,21 +1,17 @@
 import java.awt.EventQueue;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
-import javax.swing.UIManager;
 import javax.swing.JLabel;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 
-import blog.Author;
-import blog.Comment;
-import blog.Post;
+import blog.*;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
@@ -30,7 +26,7 @@ public class MainWindow extends JFrame {
 	 */
 	
 	public static ArrayList<Post> posts = new ArrayList<>();
-	SimpleDateFormat mainSDF = new SimpleDateFormat("yyyy-MM-dd");
+	SimpleDateFormat mainSDF = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -58,8 +54,8 @@ public class MainWindow extends JFrame {
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
 		
-		DefaultListModel listModel = new DefaultListModel();
-		final JList list = new JList(listModel);
+		DefaultListModel<String> listModel = new DefaultListModel<String>();
+		final JList<String> list = new JList<String>(listModel);
 		list.setSize(100, 241);
 		for(Post p : posts){
 			listModel.addElement(p.getTitle());
@@ -82,7 +78,9 @@ public class MainWindow extends JFrame {
 		lblFooter.setLocation(120, 231);
 		contentPane.add(lblFooter);
 		
-		final JLabel lblBody = new JLabel(posts.get(0).getText());
+		final JLabel lblBody = new JLabel("<html>" + posts.get(0).getText() + 
+        		"<br><br>" + posts.get(0).getNumberOfComments() + 
+        		" kommentarer</html>");
 		lblBody.setVerticalAlignment(SwingConstants.TOP);
 		lblBody.setSize(304, 168);
 		lblBody.setLocation(120, 52);
@@ -93,23 +91,17 @@ public class MainWindow extends JFrame {
 
 		        int[] selectedItems = list.getSelectedIndices();
 		        lblHeader.setText(posts.get(selectedItems[0]).getTitle());
-		        lblBody.setText(posts.get(selectedItems[0]).getText());
+		        lblBody.setText("<html>" + posts.get(selectedItems[0]).getText() + 
+		        		"<br><br>" + posts.get(selectedItems[0]).getNumberOfComments() + 
+		        		" kommentarer</html>");
 		        lblFooter.setText(posts.get(selectedItems[0]).getAuthor().getName() + ", " +
-		        mainSDF.format(posts.get(selectedItems[0]).getCalendar().getTime()));
+		        		mainSDF.format(posts.get(selectedItems[0]).getCalendar().getTime()));
 			}
 		});
 	}
-	public static void init(){
-		
-		Post p = new Post("First post", "This is the first post", new Author("Victor", "kontakt@vicolsson.se"), new GregorianCalendar(2013, 4, 25, 11, 10));
-		p.addComment(new Comment(new Author("Victor", "kontakt@vicolsson.se"), "Grattis!", new GregorianCalendar(2013, 4, 25, 11, 24)));
-		p.addComment(new Comment(new Author("Kalle", "kalle@ankeborg.se"), "Yo!", new GregorianCalendar(2013, 4, 26, 13, 40)));
-		posts.add(p);
-		
-		p = new Post("Second lolz", "This is second", new Author("Victor", "kontakt@vicolsson.se"), new GregorianCalendar(2013, 5, 2, 8, 46));
-		p.addComment(new Comment(new Author("Victor", "kontakt@vicolsson.se"), "Tjena", new GregorianCalendar(2013, 5, 2, 8, 48)));
-		posts.add(p);
-		
+	public static void init()
+	{
+		posts = (ArrayList<Post>) BlogFactory.getAllPosts();
 	}
 
 }

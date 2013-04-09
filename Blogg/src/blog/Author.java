@@ -6,6 +6,10 @@ public class Author {
 	private String mail;
 	
 	//Constructors
+	public Author(String n)
+	{
+		this.name = n;
+	}
 	public Author(String n, String m)
 	{
 		this.name = n;

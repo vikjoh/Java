@@ -9,7 +9,9 @@ public class Post {
 	private String text;
 	private Author author;
 	private Calendar calendar;
+	private int numberOfComments;
 	private List<Comment> comments = new ArrayList<>();
+	private List<String> tags = new ArrayList<>();
 	
 	//Constructors
 	public Post(String ti, String te, Author a, Calendar c)
@@ -60,6 +62,22 @@ public class Post {
 	public void setCalendar(Calendar c)
 	{
 		this.calendar = c;
+	}
+	public List<String> getTags()
+	{
+		return tags;
+	}
+	public void setTags(List<String> t)
+	{
+		this.tags = t;
+	}
+	public int getNumberOfComments()
+	{
+		return numberOfComments;
+	}
+	public void setNumberOfComments(int n)
+	{
+		this.numberOfComments = n;
 	}
 	public List<Comment> getComments()
 	{
