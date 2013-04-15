@@ -150,4 +150,8 @@ public class BlogFactory {
 			e.printStackTrace();
 		}
 	}
+	public static void editPost(int id, String header, String body)
+	{
+		
+	}
 }
