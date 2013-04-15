@@ -1,1 +1,1 @@
-Här lägger jag mina java-projekt.
+This is where all my Java projects go.
