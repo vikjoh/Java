@@ -41,6 +41,7 @@ public class BlogFactory {
 				
 				Post post = new Post(titel, body, tempAuth, tempCal);
 				post.setNumberOfComments(rs.getInt("iNumberOfComments"));
+				post.setSqlID(rs.getInt("iID"));
 				return post;
 			}
 		} catch (SQLException e) {
@@ -64,7 +65,7 @@ public class BlogFactory {
 		try {
 			con = DriverManager.getConnection(url, user, password);
 			st = con.createStatement();
-			rs = st.executeQuery("SELECT * FROM blogginlagg");
+			rs = st.executeQuery("SELECT * FROM blogginlagg WHERE bDeleted=0");
 
 			while (rs.next()) {
 				String titel = rs.getString("sHeader");
@@ -78,6 +79,7 @@ public class BlogFactory {
 				
 				Post post = new Post(titel, body, tempAuth, tempCal);
 				post.setNumberOfComments(rs.getInt("iNumberOfComments"));
+				post.setSqlID(rs.getInt("iID"));
 				ret.add(post);
 			}
 		} catch (SQLException e) {
@@ -150,8 +152,26 @@ public class BlogFactory {
 			e.printStackTrace();
 		}
 	}
-	public static void editPost(int id, String header, String body)
+	public static void deletePost(int id)
 	{
-		
+		Connection con = null;
+
+		String url = "jdbc:mysql://localhost:3306/vicolsson";
+		String user = "root";
+		String password = "";
+
+		try {
+			con = DriverManager.getConnection(url, user, password);
+			
+			String tempSQLString = "UPDATE blogginlagg SET bDeleted=1 WHERE iID=?";
+			
+			PreparedStatement stmt = con.prepareStatement(tempSQLString);
+			stmt.setInt(1, id);
+			
+			stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

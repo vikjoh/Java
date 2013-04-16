@@ -12,6 +12,7 @@ public class Post {
 	private int numberOfComments;
 	private List<Comment> comments = new ArrayList<>();
 	private List<String> tags = new ArrayList<>();
+	private int sqlID;
 	
 	//Constructors
 	public Post(String ti, String te, Author a, Calendar c)
@@ -105,6 +106,14 @@ public class Post {
 	public void removeAllComments(List<Comment> cList)
 	{
 		comments.removeAll(null);
+	}
+	public int getSqlID()
+	{
+		return sqlID;
+	}
+	public void setSqlID(int id)
+	{
+		sqlID = id;
 	}
 	
 	//Other functions

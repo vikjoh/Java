@@ -99,7 +99,9 @@ if(session.getAttribute("inloggad") == "admin")
 		out.print("</h1><p>");
 		out.print(p.getText());
 		out.print("</p>");
-		out.print(p.getAuthor().getName() + ", " + p.printCalendar());
+		out.print(p.getAuthor().getName() + ", " + p.printCalendar() + " ");
+		if(loggedIn)
+		out.print("<a href=\"deletepost.jsp?id=" + p.getSqlID() + "\">Ta bort</a>");
 	}
 %>
 </body>
